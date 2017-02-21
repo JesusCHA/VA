@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->colorButton,SIGNAL(clicked(bool)),this,SLOT(change_color_gray(bool)));
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
+    connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
+    connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     timer.start(60);
 
 
@@ -110,6 +112,39 @@ void MainWindow::change_color_gray(bool color)
         ui->colorButton->setText("Color image");
         showColorImage = false;
     }
+}
+
+
+void MainWindow::loadFile(){
+
+    QString imgload;
+    imgload = QFileDialog::getOpenFileName(this,tr("Open Image"), "/home/jesusiano", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    capture = false;
+    Mat img = imread(imgload.toStdString());
+
+    cv::resize(img,img, cv::Size(320,240));
+    cvtColor(img, grayImage, CV_BGR2GRAY);
+    cvtColor(img, colorImage, CV_BGR2RGB);
+
+}
+
+
+void MainWindow::saveFile(){
+
+    QString imgsave;
+    imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home/jesusiano", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    Mat image;
+    image = imread( imgsave.toStdString(), 1 );
+
+    cvtColor( image, grayImage, CV_BGR2GRAY );
+    imwrite(imgsave.toStdString() , grayImage );
+    namedWindow( imgsave.toStdString(), WINDOW_AUTOSIZE );
+    namedWindow( "Gray image", WINDOW_AUTOSIZE );
+    imshow( imgsave.toStdString(), image );
+    imshow( "Gray image", grayImage );
+
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)
