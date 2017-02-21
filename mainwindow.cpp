@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
     connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
-    connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
+    connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
+    connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
     timer.start(60);
 
 
@@ -118,7 +119,7 @@ void MainWindow::change_color_gray(bool color)
 void MainWindow::loadFile(){
 
     QString imgload;
-    imgload = QFileDialog::getOpenFileName(this,tr("Open Image"), "/home/jesusiano", tr("Image Files (*.png *.jpg *.bmp)"));
+    imgload = QFileDialog::getOpenFileName(this,tr("Open Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
 
     capture = false;
     Mat img = imread(imgload.toStdString());
@@ -133,7 +134,7 @@ void MainWindow::loadFile(){
 void MainWindow::saveFile(){
 
     QString imgsave;
-    imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home/jesusiano", tr("Image Files (*.png *.jpg *.bmp)"));
+    imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
 
     Mat image;
     image = imread( imgsave.toStdString(), 1 );
@@ -144,6 +145,16 @@ void MainWindow::saveFile(){
     namedWindow( "Gray image", WINDOW_AUTOSIZE );
     imshow( imgsave.toStdString(), image );
     imshow( "Gray image", grayImage );
+
+}
+
+
+void MainWindow::copyFile(){
+
+
+    destGrayImage(grayImage.size(),grayImage.type());
+    grayImage.copyTo(destGrayImage);
+
 
 }
 
