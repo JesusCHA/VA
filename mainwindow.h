@@ -50,6 +50,8 @@ public slots:
 
     void loadFile();
     void saveFile();
+    void copyFile();
+    void resizeFile();
 
 };
 

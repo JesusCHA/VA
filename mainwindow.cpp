@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
     connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
-
+ connect(ui->ResizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
     timer.start(60);
 
 
@@ -136,8 +136,6 @@ void MainWindow::saveFile(){
 
     QString imgsave;
 
-    imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
-
     imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home/default.png", tr("Image Files (*.png *.jpg *.bmp)"));
 
     Mat img;
@@ -153,7 +151,21 @@ void MainWindow::saveFile(){
         imwrite(imgsave.toStdString() , img);
     }
 
-// no guarda correctamente la imagen si no se usa tipo de formato, vuelve a aparecer el cuadro de dialogo.
+}
+
+
+void MainWindow::resizeFile(){
+
+    if(winSelected){
+        if(showColorImage){
+            Mat imgTrol1 = colorImage(imageWindow);
+            cv::resize(imgTrol1,destColorImage, cv::Size(320,240));
+        }else{
+            Mat imgTrol1 = grayImage(imageWindow);
+            cv::resize(imgTrol1,destGrayImage, cv::Size(320,240));
+        }
+    }
+
 }
 
 
@@ -172,11 +184,11 @@ void MainWindow::copyFile(){
             imgTrol1.copyTo(imgtrol2);
         }
     }else{
-      if(showColorImage)
-          colorImage.copyTo(destColorImage);
-      else
-          grayImage.copyTo(destGrayImage);
-    }
+        if(showColorImage)
+            colorImage.copyTo(destColorImage);
+        else
+            grayImage.copyTo(destGrayImage);
+  }
 
 
 }
