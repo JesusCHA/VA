@@ -152,14 +152,31 @@ void MainWindow::saveFile(){
         cvtColor(destGrayImage, img, CV_GRAY2BGR );
         imwrite(imgsave.toStdString() , img);
     }
+
+// no guarda correctamente la imagen si no se usa tipo de formato, vuelve a aparecer el cuadro de dialogo.
 }
 
 
 void MainWindow::copyFile(){
 
-
-    destGrayImage(grayImage.size(),grayImage.type());
-    grayImage.copyTo(destGrayImage);
+    if(winSelected){
+        if(showColorImage){
+            Mat imgTrol1(colorImage, imageWindow);
+            destColorImage.setTo(cv::Scalar(0,0,0));
+            Mat imgtrol2(destColorImage, cv::Rect((320-imageWindow.width)/2, (240-imageWindow.height)/2,imageWindow.width, imageWindow.height));
+            imgTrol1.copyTo(imgtrol2);
+        }else{
+            Mat imgTrol1(grayImage, imageWindow);
+            destGrayImage.setTo(0);
+            Mat imgtrol2(destGrayImage, cv::Rect((320-imageWindow.width)/2, (240-imageWindow.height)/2,imageWindow.width, imageWindow.height));
+            imgTrol1.copyTo(imgtrol2);
+        }
+    }else{
+      if(showColorImage)
+          colorImage.copyTo(destColorImage);
+      else
+          grayImage.copyTo(destGrayImage);
+    }
 
 
 }
