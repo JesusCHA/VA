@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
     connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
+
     timer.start(60);
 
 
@@ -134,18 +135,23 @@ void MainWindow::loadFile(){
 void MainWindow::saveFile(){
 
     QString imgsave;
+
     imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
 
-    Mat image;
-    image = imread( imgsave.toStdString(), 1 );
+    imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home/default.png", tr("Image Files (*.png *.jpg *.bmp)"));
 
-    cvtColor( image, grayImage, CV_BGR2GRAY );
-    imwrite(imgsave.toStdString() , grayImage );
-    namedWindow( imgsave.toStdString(), WINDOW_AUTOSIZE );
-    namedWindow( "Gray image", WINDOW_AUTOSIZE );
-    imshow( imgsave.toStdString(), image );
-    imshow( "Gray image", grayImage );
+    Mat img;
 
+    if(showColorImage)
+    {
+        cvtColor(destColorImage, img, CV_RGB2BGR);
+        imwrite(imgsave.toStdString() , img);
+
+    }
+    else {
+        cvtColor(destGrayImage, img, CV_GRAY2BGR );
+        imwrite(imgsave.toStdString() , img);
+    }
 }
 
 
