@@ -35,8 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
     connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
- connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
-  connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
+    connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
+    connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
     timer.start(60);
 
 
