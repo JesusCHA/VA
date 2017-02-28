@@ -135,6 +135,7 @@ void MainWindow::loadFile(){
 
 void MainWindow::saveFile(){
 
+try{
     QString imgsave;
 
     imgsave = QFileDialog::getSaveFileName(this,tr("Save Image"), "/home/default.png", tr("Image Files (*.png *.jpg *.bmp)"));
@@ -150,6 +151,9 @@ void MainWindow::saveFile(){
     else {
         cvtColor(destGrayImage, img, CV_GRAY2BGR );
         imwrite(imgsave.toStdString() , img);
+    }
+}catch (Exception e)
+    {
     }
 
 }
