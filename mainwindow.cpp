@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
     connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
     connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
+    connect(ui->zoomTranslation,SIGNAL(clicked(bool)),this,SLOT(zoomFile()));
+
     timer.start(60);
 
 
@@ -218,6 +220,11 @@ void MainWindow::copyFile(){
         else
             grayImage.copyTo(destGrayImage);
   }
+
+
+}
+
+void MainWindow::zoomFile(){
 
 
 }
