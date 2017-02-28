@@ -122,7 +122,7 @@
     <string>Copy</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="ResizeButton">
+  <widget class="QPushButton" name="resizeButton">
    <property name="geometry">
     <rect>
      <x>740</x>
@@ -135,7 +135,7 @@
     <string>Resize</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="EnlargeButton">
+  <widget class="QPushButton" name="enlargeButton">
    <property name="geometry">
     <rect>
      <x>740</x>

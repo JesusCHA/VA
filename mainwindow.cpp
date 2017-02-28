@@ -35,7 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
     connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
- connect(ui->ResizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
+ connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
+  connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
     timer.start(60);
 
 
@@ -165,7 +166,31 @@ void MainWindow::resizeFile(){
             cv::resize(imgTrol1,destGrayImage, cv::Size(320,240));
         }
     }
+}
 
+void MainWindow::enlargeFile(){
+
+    if(winSelected){
+        float valueY, valuex,  valueComp;
+        valuex = 320.0/float(imageWindow.width);
+        valueY = 240.0/float(imageWindow.height);
+        valueComp = valuex;
+        if(valueY < valuex)
+            valueComp = valueY;
+        if(showColorImage){
+            destColorImage.setTo(cv::Scalar(0,0,0));
+            Mat imgTrol1(colorImage, imageWindow);
+            cv::resize(imgTrol1, imgTrol1, cv::Size(), valueComp, valueComp);
+            Mat imgTrolDst(destColorImage, cv::Rect((320-imgTrol1.cols)/2, (240-imgTrol1.rows)/2, imgTrol1.cols, imgTrol1.rows));
+            imgTrol1.copyTo(imgTrolDst);
+        }else{
+            destGrayImage.setTo(0);
+            Mat imgTrol1(grayImage, imageWindow);
+            cv::resize(imgTrol1, imgTrol1, cv::Size(), valueComp, valueComp);
+            Mat imgTrolDst(destGrayImage, cv::Rect((320-imgTrol1.cols)/2, (240-imgTrol1.rows)/2, imgTrol1.cols, imgTrol1.rows));
+            imgTrol1.copyTo(imgTrolDst);
+        }
+    }
 }
 
 
