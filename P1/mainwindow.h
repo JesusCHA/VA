@@ -53,7 +53,7 @@ public slots:
     void copyFile();
     void resizeFile();
     void enlargeFile();
-    void zoomFile();
+    void warpZoomFile();
 
 };
 

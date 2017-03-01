@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
     connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
     connect(ui->zoomTranslation,SIGNAL(clicked(bool)),this,SLOT(zoomFile()));
+    connect(ui->warpZoomButton,SIGNAL(clicked(bool)),this,SLOT(warpZoomFile()));
 
     timer.start(60);
 
@@ -224,8 +225,35 @@ void MainWindow::copyFile(){
 
 }
 
-void MainWindow::zoomFile(){
+void MainWindow::warpZoomFile(){
+    if(showColorImage){
+        Mat destColorImage2;
+        destColorImage.setTo(cv::Scalar(0,0,0));
+        Point2f pt(colorImage.cols/2, colorImage.rows/2.);
+        Mat r = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
+        float tx = ui->horizontalTranslation->value();
+        float ty = ui->verticalTranslation->value();
+        r.at<double>(0,2) = tx;
+        r.at<double>(1,2) = ty;
+        warpAffine(colorImage, destColorImage2, r, Size(colorImage.cols, colorImage.rows));
+        cv::resize(destColorImage2, destColorImage2, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
+        Mat frag2(destColorImage2, cv::Rect((destColorImage2.cols - 320)/2, (destColorImage2.rows - 240)/2, 320, 240));
+        frag2.copyTo(destColorImage);
+    }else{
+        Mat destGrayImage2;
+        destGrayImage.setTo(0);
+        Point2f pt(grayImage.cols/2, grayImage.rows/2.);
+        Mat r = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
+        float tx = ui->horizontalTranslation->value();
+        float ty = ui->verticalTranslation->value();
+        r.at<double>(0,2) = tx;
+        r.at<double>(1,2) = ty;
 
+        warpAffine(grayImage, destGrayImage2, r, Size(grayImage.cols, grayImage.rows));
+        cv::resize(destGrayImage2, destGrayImage2, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
+        Mat frag2(destGrayImage2, cv::Rect((destGrayImage2.cols - 320)/2, (destGrayImage2.rows - 240)/2, 320, 240));
+        frag2.copyTo(destGrayImage);
+    }
 
 }
 
