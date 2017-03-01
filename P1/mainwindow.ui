@@ -157,6 +157,9 @@
      <height>51</height>
     </rect>
    </property>
+   <property name="maximum">
+    <number>359</number>
+   </property>
   </widget>
   <widget class="QScrollBar" name="horizontalTranslation">
    <property name="geometry">
@@ -168,10 +171,10 @@
     </rect>
    </property>
    <property name="minimum">
-    <number>-50</number>
+    <number>-320</number>
    </property>
    <property name="maximum">
-    <number>50</number>
+    <number>320</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -187,10 +190,10 @@
     </rect>
    </property>
    <property name="minimum">
-    <number>-50</number>
+    <number>-240</number>
    </property>
    <property name="maximum">
-    <number>50</number>
+    <number>240</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
