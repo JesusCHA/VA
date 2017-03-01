@@ -65,7 +65,6 @@ void MainWindow::compute()
 
         cvtColor(colorImage, grayImage, CV_BGR2GRAY);
         cvtColor(colorImage, colorImage, CV_BGR2RGB);
-
     }
 
 
@@ -73,6 +72,8 @@ void MainWindow::compute()
     {
         memcpy(imgS->bits(), colorImage.data , 320*240*3*sizeof(uchar));
         memcpy(imgD->bits(), destColorImage.data , 320*240*3*sizeof(uchar));
+        if (wrapAct==true)
+            warpZoomFile();
     }
     else
     {
@@ -80,6 +81,8 @@ void MainWindow::compute()
         cvtColor(destGrayImage,destGray2ColorImage, CV_GRAY2RGB);
         memcpy(imgS->bits(), gray2ColorImage.data , 320*240*3*sizeof(uchar));
         memcpy(imgD->bits(), destGray2ColorImage.data , 320*240*3*sizeof(uchar));
+        if (wrapAct==true)
+            warpZoomFile();
 
     }
 
@@ -122,7 +125,7 @@ void MainWindow::change_color_gray(bool color)
 
 
 void MainWindow::loadFile(){
-
+try{
     QString imgload;
     imgload = QFileDialog::getOpenFileName(this,tr("Open Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
 
@@ -132,6 +135,9 @@ void MainWindow::loadFile(){
     cv::resize(img,img, cv::Size(320,240));
     cvtColor(img, grayImage, CV_BGR2GRAY);
     cvtColor(img, colorImage, CV_BGR2RGB);
+}catch (Exception e)
+    {
+    }
 
 }
 
@@ -226,34 +232,38 @@ void MainWindow::copyFile(){
 }
 
 void MainWindow::warpZoomFile(){
-    if(showColorImage){
-        Mat destColorImage2;
+    if (ui->warpZoomButton->isChecked()){
+     wrapAct=true;
+     if(showColorImage){
+        Mat imgTrol1;
         destColorImage.setTo(cv::Scalar(0,0,0));
         Point2f pt(colorImage.cols/2, colorImage.rows/2.);
-        Mat r = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
-        float tx = ui->horizontalTranslation->value();
-        float ty = ui->verticalTranslation->value();
-        r.at<double>(0,2) = tx;
-        r.at<double>(1,2) = ty;
-        warpAffine(colorImage, destColorImage2, r, Size(colorImage.cols, colorImage.rows));
-        cv::resize(destColorImage2, destColorImage2, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
-        Mat frag2(destColorImage2, cv::Rect((destColorImage2.cols - 320)/2, (destColorImage2.rows - 240)/2, 320, 240));
-        frag2.copyTo(destColorImage);
+        Mat rotMax = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
+        float valuex = ui->horizontalTranslation->value();
+        float valuey = ui->verticalTranslation->value();
+        rotMax.at<double>(0,2) = valuex;
+        rotMax.at<double>(1,2) = valuey;
+        warpAffine(colorImage, imgTrol1, rotMax, Size(colorImage.cols, colorImage.rows));
+        cv::resize(imgTrol1, imgTrol1, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
+        Mat imgtrol2(imgTrol1, cv::Rect((imgTrol1.cols - 320)/2, (imgTrol1.rows - 240)/2, 320, 240));
+        imgtrol2.copyTo(destColorImage);
     }else{
-        Mat destGrayImage2;
+        Mat imgTrol1;
         destGrayImage.setTo(0);
         Point2f pt(grayImage.cols/2, grayImage.rows/2.);
-        Mat r = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
-        float tx = ui->horizontalTranslation->value();
-        float ty = ui->verticalTranslation->value();
-        r.at<double>(0,2) = tx;
-        r.at<double>(1,2) = ty;
-
-        warpAffine(grayImage, destGrayImage2, r, Size(grayImage.cols, grayImage.rows));
-        cv::resize(destGrayImage2, destGrayImage2, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
-        Mat frag2(destGrayImage2, cv::Rect((destGrayImage2.cols - 320)/2, (destGrayImage2.rows - 240)/2, 320, 240));
-        frag2.copyTo(destGrayImage);
+        Mat rotMax = getRotationMatrix2D(pt, ui->angleDial->value(), 1.0);
+        float valuex = ui->horizontalTranslation->value();
+        float valuey = ui->verticalTranslation->value();
+        rotMax.at<double>(0,2) = valuex;
+        rotMax.at<double>(1,2) = valuey;
+        warpAffine(grayImage, imgTrol1, rotMax, Size(grayImage.cols, grayImage.rows));
+        cv::resize(imgTrol1, imgTrol1, cv::Size(), ui->zoomTranslation->value(), ui->zoomTranslation->value());
+        Mat imgtrol2(imgTrol1, cv::Rect((imgTrol1.cols - 320)/2, (imgTrol1.rows - 240)/2, 320, 240));
+        imgtrol2.copyTo(destGrayImage);
     }
+    }else
+        wrapAct=false;
+
 
 }
 

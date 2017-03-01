@@ -40,6 +40,7 @@ private:
     Mat gray2ColorImage, destGray2ColorImage;
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
+    bool buttonActive=false, wrapAct=false;
 
 public slots:
     void compute();
