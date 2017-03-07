@@ -32,13 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->colorButton,SIGNAL(clicked(bool)),this,SLOT(change_color_gray(bool)));
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
-    connect(ui->loadFileButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
-    connect(ui->saveFileButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
-    connect(ui->copyButton,SIGNAL(clicked(bool)),this,SLOT(copyFile()));
-    connect(ui->resizeButton,SIGNAL(clicked(bool)),this,SLOT(resizeFile()));
-    connect(ui->enlargeButton,SIGNAL(clicked(bool)),this,SLOT(enlargeFile()));
-    connect(ui->zoomTranslation,SIGNAL(clicked(bool)),this,SLOT(zoomFile()));
-
+    connect(ui->loadButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
+    connect(ui->saveButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
+    connect(ui->pixelTButton,SIGNAL(clicked()),&pt,SLOT(open()));
+    connect(pt.okButton,SIGNAL(clicked()),&pt,SLOT(close()));
+    connect(ui->kernelButton,SIGNAL(clicked(bool)),&lf,SLOT(open()));
+    connect(ui->operOrderButton,SIGNAL(clicked(bool)),&op,SLOT(open()));
     timer.start(60);
 
 
@@ -161,72 +160,46 @@ try{
 }
 
 
-void MainWindow::resizeFile(){
+void MainWindow::transformPx(){
+    std::vector<uchar> wt[256];
+    int gdO = pt.newPixelBox1->value();
+    int gdi = pt.newPixelBox2->value();
+    int gdj = pt.newPixelBox3->value();
+    int gdF = pt.newPixelBox4->value();
 
-    if(winSelected){
-        if(showColorImage){
-            Mat imgTrol1 = colorImage(imageWindow);
-            cv::resize(imgTrol1,destColorImage, cv::Size(320,240));
-        }else{
-            Mat imgTrol1 = grayImage(imageWindow);
-            cv::resize(imgTrol1,destGrayImage, cv::Size(320,240));
-        }
+    int goO = pt.origPixelBox1->value();
+    int goi = pt.origPixelBox2->value();
+    int goj = pt.origPixelBox3->value();
+    int goF = pt.origPixelBox4->value();
+
+    int a,b;
+    b = goi - goO;
+
+/*    for (int i = goO; i < goi; ++i) {
+        a = (gdi-gdO)*(i-goi);
+        a = a/b;
+        wt[i] = (char)a;
     }
-}
 
-void MainWindow::enlargeFile(){
-
-    if(winSelected){
-        float valueY, valuex,  valueComp;
-        valuex = 320.0/float(imageWindow.width);
-        valueY = 240.0/float(imageWindow.height);
-        valueComp = valuex;
-        if(valueY < valuex)
-            valueComp = valueY;
-        if(showColorImage){
-            destColorImage.setTo(cv::Scalar(0,0,0));
-            Mat imgTrol1(colorImage, imageWindow);
-            cv::resize(imgTrol1, imgTrol1, cv::Size(), valueComp, valueComp);
-            Mat imgTrolDst(destColorImage, cv::Rect((320-imgTrol1.cols)/2, (240-imgTrol1.rows)/2, imgTrol1.cols, imgTrol1.rows));
-            imgTrol1.copyTo(imgTrolDst);
-        }else{
-            destGrayImage.setTo(0);
-            Mat imgTrol1(grayImage, imageWindow);
-            cv::resize(imgTrol1, imgTrol1, cv::Size(), valueComp, valueComp);
-            Mat imgTrolDst(destGrayImage, cv::Rect((320-imgTrol1.cols)/2, (240-imgTrol1.rows)/2, imgTrol1.cols, imgTrol1.rows));
-            imgTrol1.copyTo(imgTrolDst);
-        }
+    for (int i = goi; i < goj; ++i) {
+        a = (gdj-gdi)*(i-goj);
+        a = a/b;
+        wt[i] = (char)a;
     }
-}
 
+    for (int i = goj; i < goF; ++i) {
+        a = (gdF-gdj)*(i-goF);
+        a = a/b;
+        wt[i] = (char)a;
+    }
 
-void MainWindow::copyFile(){
+    //preguntar cómo pasar de int a uchar
 
-    if(winSelected){
-        if(showColorImage){
-            Mat imgTrol1(colorImage, imageWindow);
-            destColorImage.setTo(cv::Scalar(0,0,0));
-            Mat imgtrol2(destColorImage, cv::Rect((320-imageWindow.width)/2, (240-imageWindow.height)/2,imageWindow.width, imageWindow.height));
-            imgTrol1.copyTo(imgtrol2);
-        }else{
-            Mat imgTrol1(grayImage, imageWindow);
-            destGrayImage.setTo(0);
-            Mat imgtrol2(destGrayImage, cv::Rect((320-imageWindow.width)/2, (240-imageWindow.height)/2,imageWindow.width, imageWindow.height));
-            imgTrol1.copyTo(imgtrol2);
-        }
-    }else{
-        if(showColorImage)
-            colorImage.copyTo(destColorImage);
-        else
-            grayImage.copyTo(destGrayImage);
-  }
+    //usar funcion LUT
+    cv::LUT(grayImage,wt, destGrayImage);
 
-
-}
-
-void MainWindow::zoomFile(){
-
-
+   // wt.resize(256);
+*/
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)

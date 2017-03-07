@@ -13,10 +13,39 @@
 
 
 #include <rcdraw.h>
-
-
+#include <ui_pixelTForm.h>
+#include <ui_operOrderForm.h>
+#include <ui_lFilterForm.h>
 
 using namespace cv;
+
+
+
+class PixelTDialog : public QDialog, public Ui::PixelTForm{
+    Q_OBJECT
+public:
+    PixelTDialog(QDialog *parent=0) : QDialog(parent){
+        setupUi(this);
+    }
+};
+
+
+class lFilterForm : public QDialog, public Ui::LFilterForm{
+    Q_OBJECT
+public:
+    lFilterForm(QDialog *parent=0) : QDialog(parent){
+        setupUi(this);
+    }
+};
+
+
+class OperOrderForm : public QDialog, public Ui::OperOrderForm{
+    Q_OBJECT
+public:
+    OperOrderForm(QDialog *parent=0) : QDialog(parent){
+        setupUi(this);
+    }
+};
 
 namespace Ui {
     class MainWindow;
@@ -41,6 +70,10 @@ private:
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
 
+    PixelTDialog pt;
+    lFilterForm lf;
+    OperOrderForm op;
+
 public slots:
     void compute();
     void start_stop_capture(bool start);
@@ -50,11 +83,7 @@ public slots:
 
     void loadFile();
     void saveFile();
-    void copyFile();
-    void resizeFile();
-    void enlargeFile();
-    void zoomFile();
-
+    void transformPx();
 };
 
 
