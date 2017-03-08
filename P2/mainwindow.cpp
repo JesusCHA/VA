@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->loadButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
     connect(ui->saveButton,SIGNAL(clicked(bool)),this,SLOT(saveFile()));
     connect(ui->pixelTButton,SIGNAL(clicked()),&pt,SLOT(open()));
-    connect(pt.okButton,SIGNAL(clicked()),&pt,SLOT(close()));
+    connect(pt.okButton,SIGNAL(clicked()),this,SLOT(tfPxb()));
     connect(ui->kernelButton,SIGNAL(clicked(bool)),&lf,SLOT(open()));
     connect(ui->operOrderButton,SIGNAL(clicked(bool)),&op,SLOT(open()));
     timer.start(60);
@@ -67,23 +67,24 @@ void MainWindow::compute()
     }
 
 
-    if(showColorImage)
-    {
+    if(showColorImage){
         memcpy(imgS->bits(), colorImage.data , 320*240*3*sizeof(uchar));
         memcpy(imgD->bits(), destColorImage.data , 320*240*3*sizeof(uchar));
     }
-    else
-    {
+    else{
         cvtColor(grayImage,gray2ColorImage, CV_GRAY2RGB);
         cvtColor(destGrayImage,destGray2ColorImage, CV_GRAY2RGB);
         memcpy(imgS->bits(), gray2ColorImage.data , 320*240*3*sizeof(uchar));
         memcpy(imgD->bits(), destGray2ColorImage.data , 320*240*3*sizeof(uchar));
-
     }
 
     if(winSelected)
     {
         visorS->drawSquare(QPointF(imageWindow.x+imageWindow.width/2, imageWindow.y+imageWindow.height/2), imageWindow.width,imageWindow.height, Qt::green );
+    }
+
+    if(tfPx){
+        transformPx();
     }
     visorS->update();
     visorD->update();
@@ -160,46 +161,54 @@ try{
 }
 
 
+void MainWindow::tfPxb(){
+    pt.close();
+    if(!tfPx){tfPx = true;}else {tfPx = false;}
+}
+
 void MainWindow::transformPx(){
-    std::vector<uchar> wt[256];
-    int gdO = pt.newPixelBox1->value();
-    int gdi = pt.newPixelBox2->value();
-    int gdj = pt.newPixelBox3->value();
-    int gdF = pt.newPixelBox4->value();
+    std::vector<uchar> wt;
+    wt.resize(256);
+    float gdO = pt.newPixelBox1->value();
+    float gdi = pt.newPixelBox2->value();
+    float gdj = pt.newPixelBox3->value();
+    float gdF = pt.newPixelBox4->value();
 
-    int goO = pt.origPixelBox1->value();
-    int goi = pt.origPixelBox2->value();
-    int goj = pt.origPixelBox3->value();
-    int goF = pt.origPixelBox4->value();
+    float goO = pt.origPixelBox1->value();
+    float goi = pt.origPixelBox2->value();
+    float goj = pt.origPixelBox3->value();
+    float goF = pt.origPixelBox4->value();
 
-    int a,b;
+    float a,b;
+
     b = goi - goO;
-
-/*    for (int i = goO; i < goi; ++i) {
-        a = (gdi-gdO)*(i-goi);
-        a = a/b;
-        wt[i] = (char)a;
+    for (int i = goO; i < goi; ++i) {
+        a = (gdi-gdO)*(i-goO);
+        a = a/b + gdO;
+        wt[i] = (uchar)a;
     }
 
+    b = goj - goi;
     for (int i = goi; i < goj; ++i) {
-        a = (gdj-gdi)*(i-goj);
-        a = a/b;
-        wt[i] = (char)a;
+        a = (gdj-gdi)*(i-goi);
+        a = a/b + gdi;
+        wt[i] = (uchar)a;
     }
 
-    for (int i = goj; i < goF; ++i) {
-        a = (gdF-gdj)*(i-goF);
-        a = a/b;
-        wt[i] = (char)a;
+    b = goF - goj;
+    for (int i = goj; i <= goF; ++i) {
+        a = (gdF-gdj)*(i-goj);
+        a = a/b + gdj;
+        wt[i] = (uchar)a;
     }
-
-    //preguntar cómo pasar de int a uchar
-
-    //usar funcion LUT
     cv::LUT(grayImage,wt, destGrayImage);
 
-   // wt.resize(256);
-*/
+    //cv::equalizeHist(grayImage,destGrayImage);
+}
+
+
+void MainWindow::umbralizar(){
+    cv::threshold(grayImage,destGrayImage,ui->thresholdSpinBox->value(),255,CV_THRESH_BINARY);
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)

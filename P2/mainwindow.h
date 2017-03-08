@@ -74,6 +74,8 @@ private:
     lFilterForm lf;
     OperOrderForm op;
 
+    bool tfPx = false;
+
 public slots:
     void compute();
     void start_stop_capture(bool start);
@@ -83,7 +85,13 @@ public slots:
 
     void loadFile();
     void saveFile();
+
+    void tfPxb();
     void transformPx();
+
+    void umbralizar();
+
+
 };
 
 
