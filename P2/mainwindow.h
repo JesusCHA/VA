@@ -86,10 +86,16 @@ public slots:
     void loadFile();
     void saveFile();
 
+
+    void operationSwitch();
+
     void tfPxb();
     void transformPx();
 
     void umbralizar();
+    void ecualizar();
+    void suavizadoGauss();
+    void filtroMed();
 
 
 };

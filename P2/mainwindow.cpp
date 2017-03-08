@@ -83,9 +83,7 @@ void MainWindow::compute()
         visorS->drawSquare(QPointF(imageWindow.x+imageWindow.width/2, imageWindow.y+imageWindow.height/2), imageWindow.width,imageWindow.height, Qt::green );
     }
 
-    if(tfPx){
-        transformPx();
-    }
+    operationSwitch();
     visorS->update();
     visorD->update();
 
@@ -161,9 +159,33 @@ try{
 }
 
 
+void MainWindow::operationSwitch(){
+    int val=ui->operationComboBox->currentIndex();
+    switch (val) {
+    case 0:
+        transformPx();
+        break;
+    case 1:
+        umbralizar();
+        break;
+    case 2:
+        ecualizar();
+        break;
+    case 3:
+        suavizadoGauss();
+        break;
+    case 4:
+        filtroMed();
+        break;
+    default:
+        std::cout << val << std::endl;
+        break;
+    }
+}
+
+
 void MainWindow::tfPxb(){
     pt.close();
-    if(!tfPx){tfPx = true;}else {tfPx = false;}
 }
 
 void MainWindow::transformPx(){
@@ -209,6 +231,19 @@ void MainWindow::transformPx(){
 
 void MainWindow::umbralizar(){
     cv::threshold(grayImage,destGrayImage,ui->thresholdSpinBox->value(),255,CV_THRESH_BINARY);
+}
+
+void MainWindow::ecualizar(){
+    cv::equalizeHist (grayImage, destGrayImage);
+}
+
+void MainWindow::suavizadoGauss(){
+    int sz = ui->gaussWidthBox->value();
+    cv::GaussianBlur(grayImage,destGrayImage,Size(sz,sz),(float)sz/5);
+}
+
+void MainWindow::filtroMed(){
+    cv::medianBlur(grayImage,destGrayImage,3);
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)
