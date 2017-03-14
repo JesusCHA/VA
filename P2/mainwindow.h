@@ -96,6 +96,9 @@ public slots:
     void ecualizar();
     void suavizadoGauss();
     void filtroMed();
+    void erosion();
+    void dilate();
+
 
 
 };

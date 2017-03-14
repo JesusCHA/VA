@@ -177,6 +177,11 @@ void MainWindow::operationSwitch(){
     case 4:
         filtroMed();
         break;
+    case 6:
+        dilate();
+    case 7:
+        erosion();
+        break;
     default:
         std::cout << val << std::endl;
         break;
@@ -244,6 +249,18 @@ void MainWindow::suavizadoGauss(){
 
 void MainWindow::filtroMed(){
     cv::medianBlur(grayImage,destGrayImage,3);
+}
+
+void MainWindow::erosion(){
+    Mat new_image;
+    cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
+    cv::erode(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
+}
+
+void MainWindow::dilate(){
+    Mat new_image;
+    cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 0, CV_THRESH_BINARY);
+    cv::dilate(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)
