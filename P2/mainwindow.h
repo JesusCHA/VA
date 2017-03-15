@@ -74,6 +74,7 @@ private:
     lFilterForm lf;
     OperOrderForm op;
 
+    Matx33f kernel;
     bool tfPx = false;
 
 public slots:
@@ -89,6 +90,8 @@ public slots:
 
     void operationSwitch();
 
+    void closeorder();
+    void closekernel();
     void tfPxb();
     void transformPx();
 
@@ -96,6 +99,7 @@ public slots:
     void ecualizar();
     void suavizadoGauss();
     void filtroMed();
+    void filtroLin();
     void erosion();
     void dilate();
 

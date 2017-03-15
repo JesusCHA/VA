@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pixelTButton,SIGNAL(clicked()),&pt,SLOT(open()));
     connect(pt.okButton,SIGNAL(clicked()),this,SLOT(tfPxb()));
     connect(ui->kernelButton,SIGNAL(clicked(bool)),&lf,SLOT(open()));
+    connect(lf.okButton,SIGNAL(clicked()),this,SLOT(closekernel()));
     connect(ui->operOrderButton,SIGNAL(clicked(bool)),&op,SLOT(open()));
+    connect(op.okButton,SIGNAL(clicked()),this,SLOT(closeorder()));
     timer.start(60);
 
 
@@ -177,8 +179,12 @@ void MainWindow::operationSwitch(){
     case 4:
         filtroMed();
         break;
+    case 5:
+        filtroLin();
+        break;
     case 6:
         dilate();
+        break;
     case 7:
         erosion();
         break;
@@ -229,8 +235,6 @@ void MainWindow::transformPx(){
         wt[i] = (uchar)a;
     }
     cv::LUT(grayImage,wt, destGrayImage);
-
-    //cv::equalizeHist(grayImage,destGrayImage);
 }
 
 
@@ -251,6 +255,23 @@ void MainWindow::filtroMed(){
     cv::medianBlur(grayImage,destGrayImage,3);
 }
 
+void MainWindow::filtroLin(){
+
+    kernel(0,0) = lf.kernelBox11->value();
+    kernel(0,1) = lf.kernelBox12->value();
+    kernel(0,2) = lf.kernelBox13->value();
+
+    kernel(1,0) = lf.kernelBox21->value();
+    kernel(1,1) = lf.kernelBox22->value();
+    kernel(1,2) = lf.kernelBox23->value();
+
+    kernel(2,0) = lf.kernelBox31->value();
+    kernel(2,1) = lf.kernelBox32->value();
+    kernel(2,2) = lf.kernelBox33->value();
+
+    cv::filter2D(grayImage, destGrayImage, CV_8U , kernel);
+}
+
 void MainWindow::erosion(){
     Mat new_image;
     cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
@@ -259,8 +280,16 @@ void MainWindow::erosion(){
 
 void MainWindow::dilate(){
     Mat new_image;
-    cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 0, CV_THRESH_BINARY);
+    cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
     cv::dilate(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
+}
+
+void MainWindow::closeorder(){
+    op.close();
+}
+
+void MainWindow::closekernel(){
+    lf.close();
 }
 
 void MainWindow::selectWindow(QPointF p, int w, int h)
