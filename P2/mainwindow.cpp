@@ -85,7 +85,7 @@ void MainWindow::compute()
         visorS->drawSquare(QPointF(imageWindow.x+imageWindow.width/2, imageWindow.y+imageWindow.height/2), imageWindow.width,imageWindow.height, Qt::green );
     }
 
-    operationSwitch();
+    operationSwitch(ui->operationComboBox);
     visorS->update();
     visorD->update();
 
@@ -154,15 +154,14 @@ try{
         cvtColor(destGrayImage, img, CV_GRAY2BGR );
         imwrite(imgsave.toStdString() , img);
     }
-}catch (Exception e)
-    {
+}catch (Exception e){
     }
 
 }
 
 
-void MainWindow::operationSwitch(){
-    int val=ui->operationComboBox->currentIndex();
+void MainWindow::operationSwitch(QComboBox *p){
+    int val=p->currentIndex();
     switch (val) {
     case 0:
         transformPx();
@@ -188,12 +187,62 @@ void MainWindow::operationSwitch(){
     case 7:
         erosion();
         break;
+    case 8:
+        orden();
+        break;
     default:
-        std::cout << val << std::endl;
         break;
     }
 }
 
+void MainWindow::orden(){
+    if(op.firstOperCheckBox->checkState()){
+        operationSwitch(op.operationComboBox1);
+    }
+    if(op.secondOperCheckBox->checkState()){
+        opSwitchb(op.operationComboBox2);
+    }
+    if(op.thirdOperCheckBox->checkState()){
+        opSwitchb(op.operationComboBox3);
+    }
+    if(op.fourthOperCheckBox->checkState()){
+        opSwitchb(op.operationComboBox4);
+    }
+}
+
+
+
+void MainWindow::opSwitchb(QComboBox *p){
+    int val=p->currentIndex();
+    switch (val) {
+    case 0:
+        transformPx2();
+        break;
+    case 1:
+        umbralizar2();
+        break;
+    case 2:
+        ecualizar2();
+        break;
+    case 3:
+        suavizadoGauss2();
+        break;
+    case 4:
+        filtroMed2();
+        break;
+    case 5:
+        filtroLin2();
+        break;
+    case 6:
+        dilate2();
+        break;
+    case 7:
+        erosion2();
+        break;
+    default:
+        break;
+    }
+}
 
 void MainWindow::tfPxb(){
     pt.close();
@@ -237,13 +286,59 @@ void MainWindow::transformPx(){
     cv::LUT(grayImage,wt, destGrayImage);
 }
 
+void MainWindow::transformPx2(){
+    std::vector<uchar> wt;
+    wt.resize(256);
+    float gdO = pt.newPixelBox1->value();
+    float gdi = pt.newPixelBox2->value();
+    float gdj = pt.newPixelBox3->value();
+    float gdF = pt.newPixelBox4->value();
+
+    float goO = pt.origPixelBox1->value();
+    float goi = pt.origPixelBox2->value();
+    float goj = pt.origPixelBox3->value();
+    float goF = pt.origPixelBox4->value();
+
+    float a,b;
+
+    b = goi - goO;
+    for (int i = goO; i < goi; ++i) {
+        a = (gdi-gdO)*(i-goO);
+        a = a/b + gdO;
+        wt[i] = (uchar)a;
+    }
+
+    b = goj - goi;
+    for (int i = goi; i < goj; ++i) {
+        a = (gdj-gdi)*(i-goi);
+        a = a/b + gdi;
+        wt[i] = (uchar)a;
+    }
+
+    b = goF - goj;
+    for (int i = goj; i <= goF; ++i) {
+        a = (gdF-gdj)*(i-goj);
+        a = a/b + gdj;
+        wt[i] = (uchar)a;
+    }
+    cv::LUT(destGrayImage,wt, destGrayImage);
+}
+
 
 void MainWindow::umbralizar(){
     cv::threshold(grayImage,destGrayImage,ui->thresholdSpinBox->value(),255,CV_THRESH_BINARY);
 }
 
+void MainWindow::umbralizar2(){
+    cv::threshold(destGrayImage,destGrayImage,ui->thresholdSpinBox->value(),255,CV_THRESH_BINARY);
+}
+
 void MainWindow::ecualizar(){
     cv::equalizeHist (grayImage, destGrayImage);
+}
+
+void MainWindow::ecualizar2(){
+    cv::equalizeHist (destGrayImage, destGrayImage);
 }
 
 void MainWindow::suavizadoGauss(){
@@ -251,8 +346,17 @@ void MainWindow::suavizadoGauss(){
     cv::GaussianBlur(grayImage,destGrayImage,Size(sz,sz),(float)sz/5);
 }
 
+void MainWindow::suavizadoGauss2(){
+    int sz = ui->gaussWidthBox->value();
+    cv::GaussianBlur(destGrayImage,destGrayImage,Size(sz,sz),(float)sz/5);
+}
+
 void MainWindow::filtroMed(){
     cv::medianBlur(grayImage,destGrayImage,3);
+}
+
+void MainWindow::filtroMed2(){
+    cv::medianBlur(destGrayImage,destGrayImage,3);
 }
 
 void MainWindow::filtroLin(){
@@ -272,15 +376,43 @@ void MainWindow::filtroLin(){
     cv::filter2D(grayImage, destGrayImage, CV_8U , kernel);
 }
 
+void MainWindow::filtroLin2(){
+
+    kernel(0,0) = lf.kernelBox11->value();
+    kernel(0,1) = lf.kernelBox12->value();
+    kernel(0,2) = lf.kernelBox13->value();
+
+    kernel(1,0) = lf.kernelBox21->value();
+    kernel(1,1) = lf.kernelBox22->value();
+    kernel(1,2) = lf.kernelBox23->value();
+
+    kernel(2,0) = lf.kernelBox31->value();
+    kernel(2,1) = lf.kernelBox32->value();
+    kernel(2,2) = lf.kernelBox33->value();
+
+    cv::filter2D(destGrayImage, destGrayImage, CV_8U , kernel);
+}
 void MainWindow::erosion(){
     Mat new_image;
     cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
     cv::erode(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
 }
 
+void MainWindow::erosion2(){
+    Mat new_image;
+    cv::threshold( destGrayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
+    cv::erode(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
+}
+
 void MainWindow::dilate(){
     Mat new_image;
     cv::threshold( grayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
+    cv::dilate(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
+}
+
+void MainWindow::dilate2(){
+    Mat new_image;
+    cv::threshold( destGrayImage, new_image, ui->thresholdSpinBox->value(), 255, CV_THRESH_BINARY);
     cv::dilate(new_image, destGrayImage, cv::Mat(), cv::Point(-1,-1));
 }
 

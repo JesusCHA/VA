@@ -16,6 +16,8 @@
 #include <ui_pixelTForm.h>
 #include <ui_operOrderForm.h>
 #include <ui_lFilterForm.h>
+#include <stdio.h>
+
 
 using namespace cv;
 
@@ -75,7 +77,6 @@ private:
     OperOrderForm op;
 
     Matx33f kernel;
-    bool tfPx = false;
 
 public slots:
     void compute();
@@ -88,13 +89,13 @@ public slots:
     void saveFile();
 
 
-    void operationSwitch();
+    void operationSwitch(QComboBox *p);
 
     void closeorder();
     void closekernel();
     void tfPxb();
-    void transformPx();
 
+    void transformPx();
     void umbralizar();
     void ecualizar();
     void suavizadoGauss();
@@ -103,6 +104,17 @@ public slots:
     void erosion();
     void dilate();
 
+    void transformPx2();
+    void umbralizar2();
+    void ecualizar2();
+    void suavizadoGauss2();
+    void filtroMed2();
+    void filtroLin2();
+    void erosion2();
+    void dilate2();
+
+    void orden();
+    void opSwitchb(QComboBox *p);
 
 
 };
