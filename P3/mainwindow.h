@@ -13,41 +13,12 @@
 
 
 #include <rcdraw.h>
-#include <ui_pixelTForm.h>
-#include <ui_operOrderForm.h>
-#include <ui_lFilterForm.h>
 #include <stdio.h>
 
 
 using namespace cv;
 
 
-
-class PixelTDialog : public QDialog, public Ui::PixelTForm{
-    Q_OBJECT
-public:
-    PixelTDialog(QDialog *parent=0) : QDialog(parent){
-        setupUi(this);
-    }
-};
-
-
-class lFilterForm : public QDialog, public Ui::LFilterForm{
-    Q_OBJECT
-public:
-    lFilterForm(QDialog *parent=0) : QDialog(parent){
-        setupUi(this);
-    }
-};
-
-
-class OperOrderForm : public QDialog, public Ui::OperOrderForm{
-    Q_OBJECT
-public:
-    OperOrderForm(QDialog *parent=0) : QDialog(parent){
-        setupUi(this);
-    }
-};
 
 namespace Ui {
     class MainWindow;
@@ -72,9 +43,7 @@ private:
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
 
-    PixelTDialog pt;
-    lFilterForm lf;
-    OperOrderForm op;
+
 
     Matx33f kernel;
 
@@ -84,38 +53,6 @@ public slots:
     void change_color_gray(bool color);
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
-
-    void loadFile();
-    void saveFile();
-
-
-    void operationSwitch(QComboBox *p);
-
-    void closeorder();
-    void closekernel();
-    void tfPxb();
-
-    void transformPx();
-    void umbralizar();
-    void ecualizar();
-    void suavizadoGauss();
-    void filtroMed();
-    void filtroLin();
-    void erosion();
-    void dilate();
-
-    void transformPx2();
-    void umbralizar2();
-    void ecualizar2();
-    void suavizadoGauss2();
-    void filtroMed2();
-    void filtroLin2();
-    void erosion2();
-    void dilate2();
-
-    void orden();
-    void opSwitchb(QComboBox *p);
-
 
 };
 
