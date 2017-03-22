@@ -14,7 +14,7 @@
 
 #include <rcdraw.h>
 #include <stdio.h>
-
+#include "ui_mainwindow.h"
 
 using namespace cv;
 
@@ -43,9 +43,7 @@ private:
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
 
-
-
-    Matx33f kernel;
+    Mat imagenObj1,imagenObj2,imagenObj3;
 
 public slots:
     void compute();
@@ -53,6 +51,11 @@ public slots:
     void change_color_gray(bool color);
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
+
+    void addObj();
+    void delObj();
+
+    void switchComboBox(QComboBox *p);
 
 };
 

@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->colorButton,SIGNAL(clicked(bool)),this,SLOT(change_color_gray(bool)));
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
+    connect(ui->addObjButton, SIGNAL(clicked()),this,SLOT(addObj()));
+    connect(ui->delObjButton, SIGNAL(clicked()),this,SLOT(delObj()));
     timer.start(60);
 
 
@@ -79,7 +81,7 @@ void MainWindow::compute()
 
     visorS->update();
     visorD->update();
-
+    switchComboBox(ui->objetosComboBox);
 }
 
 void MainWindow::start_stop_capture(bool start)
@@ -139,5 +141,40 @@ void MainWindow::deselectWindow()
 {
     winSelected = false;
 }
+
+
+void MainWindow::addObj(){
+
+    if(winSelected){
+        Mat imagenTrol(grayImage, imageWindow);
+        destGrayImage.setTo(0);
+        Mat imagenTrol2(destGrayImage, cv::Rect((320-imageWindow.width)/2, (240-imageWindow.height)/2,imageWindow.width, imageWindow.height));
+        imagenTrol.copyTo(imagenTrol2);
+        switch (ui->objetosComboBox->currentIndex()) {
+        case 0:
+            destGrayImage.copyTo(imagenObj1);
+            break;
+        case 1:
+            destGrayImage.copyTo(imagenObj2);
+            break;
+        case 2:
+            destGrayImage.copyTo(imagenObj3);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void MainWindow::delObj(){
+
+}
+
+void MainWindow::switchComboBox(QComboBox *p){
+
+}
+
+
+
 
 
