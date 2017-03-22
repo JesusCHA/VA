@@ -96,7 +96,7 @@
     <string>Select Object</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxObjectSelect">
+  <widget class="QComboBox" name="objetosComboBox">
    <property name="geometry">
     <rect>
      <x>740</x>
