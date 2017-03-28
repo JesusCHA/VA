@@ -44,6 +44,7 @@ private:
     Rect imageWindow;
 
     Mat imagenObj1,imagenObj2,imagenObj3;
+    ORB detector;
 
 public slots:
     void compute();

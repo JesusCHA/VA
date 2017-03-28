@@ -16,7 +16,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     rcdraw.h   
 
-LIBS += -L/usr/local/lib -lQGLViewer -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -lopencv_core -lopencv_highgui -lopencv_features2d -lopencv_flann -lopencv_video -lopencv_calib3d
-#LIBS += -L/usr/local/lib -L/usr/include/QGLViewer -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -lopencv_core -lopencv_highgui -lopencv_features2d -lopencv_flann -lopencv_video -lopencv_calib3d
+#LIBS += -L/usr/local/lib -lQGLViewer -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -lopencv_core -lopencv_highgui -lopencv_features2d -lopencv_flann -lopencv_video -lopencv_calib3d
+LIBS += -L/usr/local/lib -L/usr/include/QGLViewer -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -lopencv_core -lopencv_highgui -lopencv_features2d -lopencv_flann -lopencv_video -lopencv_calib3d
 FORMS    += mainwindow.ui
 

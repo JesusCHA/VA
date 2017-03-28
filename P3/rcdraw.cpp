@@ -176,7 +176,7 @@ void RCDraw::paintEvent ( QPaintEvent * )
 	painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
         if(onSelection)
-                drawSquare((iniCoorSelected+endCoorSelected)/2, abs(endCoorSelected.x()-iniCoorSelected.x()),abs(endCoorSelected.y()-iniCoorSelected.y()), Qt::green );
+                drawSquare((iniCoorSelected+endCoorSelected)/2, std::abs(endCoorSelected.x()-iniCoorSelected.x()),std::abs(endCoorSelected.y()-iniCoorSelected.y()), Qt::green );
 
         if ( qimg != NULL )
         {
@@ -511,7 +511,7 @@ void RCDraw::mouseMoveEvent(QMouseEvent *e)
 void RCDraw::mouseReleaseEvent ( QMouseEvent *e )
 {
         if (e->button() == Qt::LeftButton)
-                emit windowSelected((iniCoorSelected+endCoorSelected)/2, abs(endCoorSelected.x()-iniCoorSelected.x()),abs(endCoorSelected.y()-iniCoorSelected.y()));
+                emit windowSelected((iniCoorSelected+endCoorSelected)/2, std::abs(endCoorSelected.x()-iniCoorSelected.x()),std::abs(endCoorSelected.y()-iniCoorSelected.y()));
         onSelection = false;
 }
 

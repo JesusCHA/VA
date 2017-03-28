@@ -76,12 +76,12 @@ void MainWindow::compute()
 
     if(winSelected)
     {
-        visorS->drawSquare(QPointF(imageWindow.x+imageWindow.width/2, imageWindow.y+imageWindow.height/2), imageWindow.width,imageWindow.height, Qt::green );
-    }
+            visorS->drawSquare(QPointF(imageWindow.x+imageWindow.width/2, imageWindow.y+imageWindow.height/2), imageWindow.width,imageWindow.height, Qt::green );
+     }
 
     visorS->update();
     visorD->update();
-    switchComboBox(ui->objetosComboBox);
+   switchComboBox(ui->objetosComboBox);
 }
 
 void MainWindow::start_stop_capture(bool start)
@@ -172,6 +172,23 @@ void MainWindow::delObj(){
 
 void MainWindow::switchComboBox(QComboBox *p){
 
+    switch (p->currentIndex()) {
+    case 0:
+        if (!imagenObj1.empty())
+            imagenObj1.copyTo(destGrayImage);
+
+        break;
+    case 1:
+        if (!imagenObj2.empty())
+        imagenObj2.copyTo(destGrayImage);
+        break;
+    case 2:
+        if (!imagenObj3.empty())
+        imagenObj3.copyTo(destGrayImage);
+        break;
+    default:
+        break;
+    }
 }
 
 
