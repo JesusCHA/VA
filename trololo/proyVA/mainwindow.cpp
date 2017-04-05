@@ -162,8 +162,7 @@ void MainWindow::showImageObject()
          destGrayImage.setTo(cv::Scalar(0,0,0));
 
 }
-void MainWindow::addObject()
-{
+void MainWindow::addObject(){
 
             tipo_objeto obj;
             vector <KeyPoint> kp;
@@ -186,10 +185,10 @@ void MainWindow::addObject()
                     obj.imagenes.push_back(img);
                     obj.descriptores.push_back(descriptor);
                     obj.coords.push_back(v);
-
                     objetos[ui->objectComboBox->currentIndex()] = obj;
                 }
         }
+            deselectWindow();
 
 }
 
@@ -236,28 +235,21 @@ void MainWindow::match(){
         if(region[0].size()>60){
             rect = cv::boundingRect(region[0]);
             visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::green );
+            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 1",12, Qt::green);
+
         }
         if(region[1].size()>60){
             rect = cv::boundingRect(region[1]);
-            visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::blue );
+            visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::blue);
+            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 2",12,Qt::blue);
         }
         if(region[2].size()>60){
             rect = cv::boundingRect(region[2]);
             visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::red );
+            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 3",12,Qt::red);
         }
 
     }
-    /*
-con queryidx accedemos al la lista.
-imgidx indice dentro de la coleccion donde esta ese punto-> indice de objeto.
-
-boundingrect calcular el rectangulo.
-
-
-*/
-
-
-
 
 }
 

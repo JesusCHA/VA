@@ -121,11 +121,17 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="minimumSize">
+    <size>
+     <width>291</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="minimum">
     <number>0</number>
    </property>
    <property name="maximum">
-    <number>20</number>
+    <number>3</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
