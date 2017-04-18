@@ -33,11 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->colorButton,SIGNAL(clicked(bool)),this,SLOT(change_color_gray(bool)));
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
+    connect(ui->loadimageButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
 
-    connect(ui->addButton,SIGNAL(clicked(bool)),this,SLOT(addObject()));
-    connect(ui->delButton,SIGNAL(clicked(bool)),this,SLOT(removeObject()));
-    matcher = BFMatcher(cv::NORM_HAMMING);
-    objetos.resize(3);
     timer.start(60);
 
 }
@@ -63,9 +60,6 @@ void MainWindow::compute()
         cvtColor(colorImage, colorImage, CV_BGR2RGB);
 
     }
-
-    match();
-    showImageObject();
 
     if(showColorImage)
     {
@@ -119,6 +113,23 @@ void MainWindow::change_color_gray(bool color)
     }
 }
 
+void MainWindow::loadFile(){
+try{
+    QString imgload;
+    imgload = QFileDialog::getOpenFileName(this,tr("Open Image"), "/home", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    capture = false;
+    Mat img = imread(imgload.toStdString());
+
+    cv::resize(img,img, cv::Size(320,240));
+    cvtColor(img, grayImage, CV_BGR2GRAY);
+    cvtColor(img, colorImage, CV_BGR2RGB);
+}catch (Exception e)
+    {
+    }
+
+}
+
 void MainWindow::selectWindow(QPointF p, int w, int h)
 {
     QPointF pEnd;
@@ -143,115 +154,6 @@ void MainWindow::selectWindow(QPointF p, int w, int h)
     }
 }
 
-void MainWindow::showImageObject()
-{
-    Mat img;
-    tipo_objeto obj;
-    uint i;
-    obj = objetos[ui->objectComboBox->currentIndex()];
-    qDebug()<<obj.imagenes.size();
-    if(!obj.imagenes.empty()){
-        i = ui->objScrollBar->value();
-        qDebug()<<"valor: "<<i;
-        if(i>=obj.imagenes.size())
-            i = obj.imagenes.size() - 1;
-        img = obj.imagenes[i];
-        destGrayImage.setTo(cv::Scalar(0,0,0));
-        Mat frag2(destGrayImage, cv::Rect((320-img.cols)/2, (240-img.rows)/2,img.cols, img.rows));
-        img.copyTo(frag2);
-    }else
-         destGrayImage.setTo(cv::Scalar(0,0,0));
-
-}
-void MainWindow::addObject(){
-
-            tipo_objeto obj;
-            vector <KeyPoint> kp;
-            vector <Point2f> v;
-            Mat descriptor;
-            Mat img;
-            obj = objetos[ui->objectComboBox->currentIndex()];
-            qDebug()<<obj.imagenes.size();
-
-            //imagen
-            Mat frag1(grayImage, imageWindow);
-            if(winSelected){
-                detector->detect(frag1, kp, cv::Mat());
-                if(!kp.empty()){
-                    detector->compute(frag1, kp, descriptor);
-                    for(uint i = 0; i<v.size(); i++){
-                       v.push_back(kp[i].pt);
-                    }
-                    frag1.copyTo(img);
-                    obj.imagenes.push_back(img);
-                    obj.descriptores.push_back(descriptor);
-                    obj.coords.push_back(v);
-                    objetos[ui->objectComboBox->currentIndex()] = obj;
-                }
-        }
-            deselectWindow();
-
-}
-
-void MainWindow::removeObject(){
-    objetos[ui->objectComboBox->currentIndex()] = tipo_objeto();
-}
-
-void MainWindow::match(){
-    tipo_objeto obj2;
-    DMatch m;
-    vector<DMatch> matches;
-    tipo_objeto obj;
-    vector <KeyPoint> kp;
-    vector <vector <Point2f> > region;
-    region.resize(3);
-    Mat descriptor;
-    vector<int> colectionToObject;
-    Rect rect;
-    int numobj;
-
-    detector->detect(grayImage, kp, cv::Mat());
-    if(!kp.empty()){
-        detector->compute(grayImage, kp, descriptor);
-        matcher.clear();
-        colectionToObject.clear();
-        for(uint i=0;i<objetos.size();i++){
-            obj2 = objetos[i];
-            for(uint j = 0; j<obj2.imagenes.size();j++)
-                colectionToObject.push_back(i);
-            matcher.add(obj2.descriptores);
-        }
-
-        matcher.match(descriptor, matches, vector<Mat>());
-
-        for(uint i=0;i<matches.size();i++){
-            m = matches[i];
-            numobj = colectionToObject[m.imgIdx];
-            obj2 = objetos[numobj];
-            if(m.distance<=60){
-                region[numobj].push_back(kp[m.queryIdx].pt);
-            }
-
-        }
-        if(region[0].size()>60){
-            rect = cv::boundingRect(region[0]);
-            visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::green );
-            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 1",12, Qt::green);
-        }
-        if(region[1].size()>60){
-            rect = cv::boundingRect(region[1]);
-            visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::blue);
-            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 2",12,Qt::blue);
-        }
-        if(region[2].size()>60){
-            rect = cv::boundingRect(region[2]);
-            visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::red );
-            visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 3",12,Qt::red);
-        }
-
-    }
-
-}
 
 
 void MainWindow::deselectWindow()

@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QFileDialog>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -40,15 +40,6 @@ private:
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
 
-    struct tipo_objeto{
-        vector<Mat> imagenes;
-        std::vector<std::vector<Point2f> > coords;
-        vector<Mat> descriptores;
-    }objeto;
-
-    vector<tipo_objeto> objetos;
-    Ptr<ORB> detector = ORB::create();
-    BFMatcher matcher;
 
 public slots:
     //void load_from_file();
@@ -57,10 +48,7 @@ public slots:
     void change_color_gray(bool color);
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
-    void addObject();
-    void removeObject();
-    void match();
-    void showImageObject();
+        void loadFile();
 
 };
 
