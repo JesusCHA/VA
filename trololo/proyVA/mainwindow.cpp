@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //cap = new VideoCapture(0);
-    cap = new VideoCapture(0);
+    cap = new VideoCapture(1);
     if(!cap->isOpened())
         cap = new VideoCapture(1);
     capture = true;
@@ -64,6 +64,8 @@ void MainWindow::compute()
 
     }
 
+    match();
+    showImageObject();
 
     if(showColorImage)
     {
@@ -85,8 +87,7 @@ void MainWindow::compute()
     }
     visorS->update();
     visorD->update();
-    match();
-    showImageObject();
+
 }
 
 
@@ -236,7 +237,6 @@ void MainWindow::match(){
             rect = cv::boundingRect(region[0]);
             visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::green );
             visorS->drawText(QPoint(rect.x+rect.width/2, rect.y+rect.height/2),"Obj 1",12, Qt::green);
-
         }
         if(region[1].size()>60){
             rect = cv::boundingRect(region[1]);
