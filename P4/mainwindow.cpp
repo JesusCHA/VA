@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //cap = new VideoCapture(0);
-    cap = new VideoCapture(1);
+    cap = new VideoCapture(0);
     if(!cap->isOpened())
         cap = new VideoCapture(1);
     capture = true;
@@ -27,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
     destGrayImage.create(240,320,CV_8UC1);
     gray2ColorImage.create(240,320,CV_8UC3);
     destGray2ColorImage.create(240,320,CV_8UC3);
+
+    segIMage.create(240,320,CV_32SC1);
+    visitados.create(240,320,CV_8UC1);
+    visitados.setTo(0);
+    segIMage.setTo(-1);
+
 
     connect(&timer,SIGNAL(timeout()),this,SLOT(compute()));
     connect(ui->captureButton,SIGNAL(clicked(bool)),this,SLOT(start_stop_capture(bool)));
@@ -60,6 +66,9 @@ void MainWindow::compute()
         cvtColor(colorImage, colorImage, CV_BGR2RGB);
 
     }
+
+    crearRegiones();
+    dibujarImg();
 
     if(showColorImage)
     {
@@ -155,6 +164,71 @@ void MainWindow::selectWindow(QPointF p, int w, int h)
 }
 
 
+void MainWindow::crearRegiones(){
+    visitados.setTo(0);
+    segIMage.setTo(-1);
+    Canny(grayImage, imgCanny, 50, 200);
+    for (int y = 0; y < 240; ++y) {
+        for (int x = 0; x < 320; ++x) {
+
+            //punto identificador -1  y que no sea imagen de borde
+            if(segIMage.at<int>(y,x) == -1 && imgCanny.at<int>(y,x) == 0){
+                region reg;
+                reg.idR = listRegion.size();
+                reg.seed = Point(x,y);
+                reg.cantidad = 0;
+                reg.color = grayImage.at<uchar>(y,x);
+                //reg.frontera
+                listRegion.push_back(reg);
+                analisisRegion(reg.seed, imgCanny, visitados, reg.idR);
+            }
+        }
+    }
+}
+
+
+void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg){
+    std::vector<Point> lista;
+    Point pAct, pNuevo;
+    int i=0;
+    lista.push_back(pInicial);
+    uchar grisSemilla = grayImage.at<uchar>(pInicial.y, pInicial.x);
+    while(i<lista.size()){
+        pAct = lista[i];
+        if(pAct.x>=0 && pAct.x<320 && pAct.y>=0 && pAct.y<240 && visitados.at<uchar>(pAct.y, pAct.x)==0){
+            //Realizar   la   comprobación   correspondiente   sobre   el   píxel
+            if(abs (grisSemilla - grayImage.at<uchar>(pAct.y,pAct.x)) < 30){
+                visitados.at<uchar>(pAct.y, pAct.x)=1;
+                //Si se deben analizar también los vecinos, incluirlos en la lista
+                segIMage.at<int>(pAct.y,pAct.x) = idReg;
+
+                pNuevo.x = pAct.x-1;
+                pNuevo.y = pAct.y;
+                lista.push_back(pNuevo);
+                pNuevo.x = pAct.x+1;
+                pNuevo.y = pAct.y;
+                lista.push_back(pNuevo);
+                pNuevo.x = pAct.x;
+                pNuevo.y = pAct.y-1;
+                lista.push_back(pNuevo);
+                pNuevo.x = pAct.x;
+                pNuevo.y = pAct.y+1;
+                lista.push_back(pNuevo);
+            }
+        }
+    i++;
+    }
+    lista.clear();
+}
+
+void MainWindow::dibujarImg(){
+    for (int y = 0; y < 240; ++y) {
+        for (int x = 0; x < 320; ++x) {
+            destGrayImage.at<uchar>(y,x) = listRegion[segIMage.at<int>(y,x)].color;
+        }
+    }
+    listRegion.clear();
+}
 
 void MainWindow::deselectWindow()
 {

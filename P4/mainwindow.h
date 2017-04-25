@@ -36,9 +36,20 @@ private:
     RCDraw *visorS, *visorD;
     QImage *imgS, *imgD;
     Mat colorImage, grayImage, destColorImage, destGrayImage;
+    Mat imgCanny, segIMage, visitados;
     Mat gray2ColorImage, destGray2ColorImage;
     bool capture, showColorImage, winSelected;
     Rect imageWindow;
+
+    struct region{
+        int idR;
+        int cantidad;
+        Point seed;
+        uchar color;
+        list<Point> frontera;
+    };
+
+    std::vector<region> listRegion;
 
 
 public slots:
@@ -48,7 +59,11 @@ public slots:
     void change_color_gray(bool color);
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
-        void loadFile();
+    void loadFile();
+
+    void crearRegiones();
+    void analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg);
+    void dibujarImg();
 
 };
 
