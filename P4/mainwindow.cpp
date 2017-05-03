@@ -175,7 +175,7 @@ void MainWindow::crearRegiones(){
     visitados.setTo(0);
     segIMage.setTo(-1);
     listRegion.clear();
-    Canny(grayImage, imgCanny, 50, 200);
+    Canny(grayImage, imgCanny, 30, 100);
     for (int y = 0; y < 240; ++y) {
         for (int x = 0; x < 320; ++x) {
             //punto identificador -1  y que no sea imagen de borde
@@ -230,13 +230,11 @@ void MainWindow::flagBorde(){
 void MainWindow::drawBorders(){
    region r;
    Point p;
-   qDebug()<< listRegion.size();
    for (uint i = 0; i < listRegion.size(); i++) {
        r = listRegion[i];
        for(uint j = 0; j < r.frontera.size(); j++){
-           qDebug()<<"entra" << i << j;
            p = r.frontera[j];
-           visorD->drawSquare(QPoint(p.x,p.y),3,3,Qt::green);
+           visorD->drawSquare(QPoint(p.x,p.y),1,1,Qt::green);
            //visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::green );
        }
    }
@@ -253,7 +251,7 @@ void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int 
         pAct = lista[i];
         if(pAct.x>=0 && pAct.x<320 && pAct.y>=0 && pAct.y<240 && visitados.at<uchar>(pAct.y, pAct.x)==0){
             //Realizar   la   comprobación   correspondiente   sobre   el   píxel
-            if(abs (grisSemilla - grayImage.at<uchar>(pAct.y,pAct.x)) < 30){
+            if(abs (grisSemilla - grayImage.at<uchar>(pAct.y,pAct.x)) < 40){
                 visitados.at<uchar>(pAct.y, pAct.x)=1;
                 //Si se deben analizar también los vecinos, incluirlos en la lista
                 segIMage.at<int>(pAct.y,pAct.x) = idReg;
