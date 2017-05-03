@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     capture = true;
     showColorImage = false;
     winSelected = false;
+    bordes = false;
+
     cap->set(CV_CAP_PROP_FRAME_WIDTH, 320);
     cap->set(CV_CAP_PROP_FRAME_HEIGHT, 240);
     imgS = new QImage(320,240, QImage::Format_RGB888);
@@ -40,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
     connect(ui->loadimageButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
-
+    connect(ui->checkBox, SIGNAL(stateChanged(int)),this, SLOT(flagBorde()));
     timer.start(60);
 
 }
@@ -69,6 +71,11 @@ void MainWindow::compute()
 
     crearRegiones();
     dibujarImg();
+
+    if(bordes){
+        drawBorders();
+    }
+
 
     if(showColorImage)
     {
@@ -167,10 +174,10 @@ void MainWindow::selectWindow(QPointF p, int w, int h)
 void MainWindow::crearRegiones(){
     visitados.setTo(0);
     segIMage.setTo(-1);
+    listRegion.clear();
     Canny(grayImage, imgCanny, 50, 200);
     for (int y = 0; y < 240; ++y) {
         for (int x = 0; x < 320; ++x) {
-
             //punto identificador -1  y que no sea imagen de borde
             if(segIMage.at<int>(y,x) == -1 && imgCanny.at<int>(y,x) == 0){
                 region reg;
@@ -178,19 +185,68 @@ void MainWindow::crearRegiones(){
                 reg.seed = Point(x,y);
                 reg.cantidad = 0;
                 reg.color = grayImage.at<uchar>(y,x);
-                //reg.frontera
+                //reg.frontera.push_back();
                 listRegion.push_back(reg);
                 analisisRegion(reg.seed, imgCanny, visitados, reg.idR);
             }
         }
     }
+    frontera();
+}
+
+void MainWindow::frontera(){
+    int idpAct;
+    Point pAct;
+    region * r;
+    for (int y = 0; y < 240; y++) {
+        for (int x = 0; x < 320; x++) {
+           idpAct = segIMage.at<int>(y,x);
+           if(idpAct >= 0){
+               pAct = Point(x,y);
+               r = &listRegion[idpAct];
+               if(x<319 && segIMage.at<int>(y,x+1) != idpAct){
+                    r->frontera.push_back(pAct);
+               } else if(y<239 && segIMage.at<int>(y+1,x) != idpAct){
+                    r->frontera.push_back(pAct);
+               } else if(x > 0 && segIMage.at<int>(y,x-1) != idpAct){
+                    r->frontera.push_back(pAct);
+               } else if(y > 0 && segIMage.at<int>(y-1,x) != idpAct){
+                    r->frontera.push_back(pAct);
+               }
+            }
+        }
+    }
+}
+
+void MainWindow::flagBorde(){
+
+    if(bordes){
+        bordes=false;
+    }else{
+        bordes=true;
+    }
+}
+
+void MainWindow::drawBorders(){
+   region r;
+   Point p;
+   qDebug()<< listRegion.size();
+   for (uint i = 0; i < listRegion.size(); i++) {
+       r = listRegion[i];
+       for(uint j = 0; j < r.frontera.size(); j++){
+           qDebug()<<"entra" << i << j;
+           p = r.frontera[j];
+           visorD->drawSquare(QPoint(p.x,p.y),3,3,Qt::green);
+           //visorS->drawSquare(QPointF(rect.x+rect.width/2, rect.y+rect.height/2), rect.width,rect.height, Qt::green );
+       }
+   }
 }
 
 
 void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg){
     std::vector<Point> lista;
     Point pAct, pNuevo;
-    int i=0;
+    uint i=0;
     lista.push_back(pInicial);
     uchar grisSemilla = grayImage.at<uchar>(pInicial.y, pInicial.x);
     while(i<lista.size()){
@@ -203,7 +259,7 @@ void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int 
                 segIMage.at<int>(pAct.y,pAct.x) = idReg;
 
                 pNuevo.x = pAct.x-1;
-                pNuevo.y = pAct.y;
+                pNuevo.y = pAct.y;                
                 lista.push_back(pNuevo);
                 pNuevo.x = pAct.x+1;
                 pNuevo.y = pAct.y;
@@ -211,6 +267,7 @@ void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int 
                 pNuevo.x = pAct.x;
                 pNuevo.y = pAct.y-1;
                 lista.push_back(pNuevo);
+                pNuevo.x = pAct.x-1;
                 pNuevo.x = pAct.x;
                 pNuevo.y = pAct.y+1;
                 lista.push_back(pNuevo);
@@ -218,6 +275,8 @@ void MainWindow::analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int 
         }
     i++;
     }
+
+
     lista.clear();
 }
 
@@ -227,7 +286,6 @@ void MainWindow::dibujarImg(){
             destGrayImage.at<uchar>(y,x) = listRegion[segIMage.at<int>(y,x)].color;
         }
     }
-    listRegion.clear();
 }
 
 void MainWindow::deselectWindow()

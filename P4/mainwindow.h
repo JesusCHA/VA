@@ -38,7 +38,7 @@ private:
     Mat colorImage, grayImage, destColorImage, destGrayImage;
     Mat imgCanny, segIMage, visitados;
     Mat gray2ColorImage, destGray2ColorImage;
-    bool capture, showColorImage, winSelected;
+    bool capture, showColorImage, winSelected, bordes;
     Rect imageWindow;
 
     struct region{
@@ -46,7 +46,7 @@ private:
         int cantidad;
         Point seed;
         uchar color;
-        list<Point> frontera;
+        std::vector<Point> frontera;
     };
 
     std::vector<region> listRegion;
@@ -64,6 +64,9 @@ public slots:
     void crearRegiones();
     void analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg);
     void dibujarImg();
+    void frontera();
+    void drawBorders();
+    void flagBorde();
 
 };
 
