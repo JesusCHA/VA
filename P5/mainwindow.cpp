@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
     connect(ui->loadimageButton,SIGNAL(clicked(bool)),this,SLOT(loadFile()));
-    connect(ui->checkBox, SIGNAL(stateChanged(int)),this, SLOT(flagBorde()));
+    //connect(ui->checkBox, SIGNAL(stateChanged(int)),this, SLOT(flagBorde()));
     timer.start(60);
 
 }
@@ -69,8 +69,8 @@ void MainWindow::compute()
 
     }
 
-    crearRegiones();
-    dibujarImg();
+    //crearRegiones();
+    //dibujarImg();
 
     if(bordes){
         drawBorders();
@@ -139,7 +139,7 @@ try{
 
     cv::resize(img,img, cv::Size(320,240));
     cvtColor(img, grayImage, CV_BGR2GRAY);
-    cvtColor(img, colorImage, CV_BGR2RGB);
+    cvtColor(img, destGrayImage, CV_BGR2GRAY);
 }catch (Exception e)
     {
     }

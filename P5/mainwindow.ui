@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>344</height>
+    <width>904</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,7 +50,7 @@
     <rect>
      <x>740</x>
      <y>20</y>
-     <width>101</width>
+     <width>151</width>
      <height>31</height>
     </rect>
    </property>
@@ -69,7 +69,7 @@
     <rect>
      <x>740</x>
      <y>60</y>
-     <width>101</width>
+     <width>151</width>
      <height>31</height>
     </rect>
    </property>
@@ -91,44 +91,18 @@
     <rect>
      <x>740</x>
      <y>100</y>
-     <width>101</width>
+     <width>151</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Load Image</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>180</y>
-     <width>121</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Draw borders</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_2">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>210</y>
-     <width>121</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Use Statistics</string>
+    <string>Load Images</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>730</x>
+     <x>770</x>
      <y>240</y>
      <width>97</width>
      <height>22</height>
@@ -136,6 +110,123 @@
    </property>
    <property name="text">
     <string>Merge</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="imageFrameS_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>270</y>
+     <width>320</width>
+     <height>240</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+  </widget>
+  <widget class="QFrame" name="imageFrameD_2">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>270</y>
+     <width>320</width>
+     <height>240</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="InitializeDisButton">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>140</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Initialize Disparity</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="propagateDisButton">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>180</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Propagate Disparity</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="LoadGrtruthButton">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>280</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Ground truth</string>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="lcdExtimated">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>390</y>
+     <width>64</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="lcdTrue">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>480</y>
+     <width>64</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>350</y>
+     <width>141</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Extimated disparity</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>440</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>True disparity</string>
    </property>
   </widget>
  </widget>
