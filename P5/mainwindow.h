@@ -16,13 +16,19 @@
 
 using namespace cv;
 using namespace std;
+
 namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+
+
+class MainWindow :
+
+     public QMainWindow
 {
     Q_OBJECT
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -33,70 +39,68 @@ private:
     QTimer timer;
 
     VideoCapture *cap;
-    RCDraw *visorS, *visorD, *visorBD, *visorBS;
-    QImage *imgS, *imgD, *imgBD, *imgBS;
-    Mat colorImage, grayImage, destColorImage, destGrayImage, gray2ColorImage, destGray2ColorImage;
-    Mat imgCanny, segIMage, visitados;
-    Mat bottomGrayImage, destBottomGrayImage;
-    bool capture, showColorImage, winSelected, bordes;
+    RCDraw *visorS, *visorD, *visorBS, *visorBD;
+    QImage *imgS, *imgD, *imgBS, *imgBD;
+    Mat colorImage, grayImage, destColorImage, destGrayImage, bottomGrayImage, destBottomGrayImage;
+    Mat gray2ColorImage, destGray2ColorImage;
+    bool capture, showColorImage, winSelected,newImage;
     Rect imageWindow;
-    Mat dispImg, bordeImg, pfijos;
+    Mat visitados, imgBorde, segmentada, pfijos;
+    std::vector<Point> LFrontera;
+    Mat dispImg;
+    Mat bordeImg;
     float ancho;
+ /*  struct region{
+        int id;
+        int g;
+        vector<Point> PFrontera;
+    };*/
 
-    struct region{
-        int idR;
-        int cantidad;
-        Point seed;
-        uchar color;
-        std::vector<Point> frontera;
-    };
 
     struct corner{
-        Point coor;
-        float vcoor;
-        bool  homologo;
+            Point coor;
+            float vcoor;
+            bool homologo;
+
     };
 
-    struct greater_than{
+    struct greater_than
+    {
+        inline bool operator() (const corner& corner1, const corner& corner2)
+        {
+            return (corner1.vcoor > corner2.vcoor);
+        }
+    };
 
-            inline bool operator() (const corner& corner1, const corner& corner2)
-            {
-                return (corner1.vcoor > corner2.vcoor);
-            }
-     };
-
-    std::vector<region> listRegion;
+    vector <uchar> LRegiones;
     vector <float> DispRegiones;
     Mat corner1, corner2;
-    std::vector<corner> LCorner;
-    std::vector<Point> homologos;
+     std::vector<corner> LCorner;
+     std::vector<Point> homologos;
 
 public slots:
-    //void load_from_file();
     void compute();
-    void start_stop_capture(bool start);
-    void change_color_gray(bool color);
+    //void start_stop_capture(bool start);
+  //  void change_color_gray(bool color);
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
-    void loadFile();
-    void loadGround();
-
-    void crearRegiones();
-    void analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg);
-    void dibujarImg();
-    void frontera();
-    void flagBorde();
-
-    void calcularEsquinas();
-    void calcMediaDisp();
-
-    void propagar();
-    void dispersion(const Point &inicial);
+    void load_from_file();
+    void analisisRegion(const Point &inicial);
+    void inicializar();
+    void segmentar();
+    void generarImagen();
+    std::vector<cv::Point> getRegions();
+    void drawRegions();
     void disparity();
+    void calcularEsquinas();
+    void showCorners();
+    void calcMediaDisp();
     void generarImagenDisp();
-    void showDispImg();
-
-    void drawCorners();
+    void dispersion(const Point &inicial);
+    void propagar();
+   void showDispImg();
+   void calcAfterLoadImage();
+   void loadGround();
 
 
 };
