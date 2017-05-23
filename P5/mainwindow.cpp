@@ -597,24 +597,20 @@ void MainWindow::drawCorners(){
     for(uint i = 0; i < LCorner.size();i++){
         Point c1 = LCorner[i].coor;
         visorS->drawEllipse(QPoint(c1.x, c1.y), 1, 1, Qt::red, -1, 0);
-
     }
     for(uint i = 0; i < homologos.size();i++){
         Point c1 = homologos[i];
         visorD->drawEllipse(QPoint(c1.x, c1.y), 1, 1, Qt::green, -1, 0);
-
     }
     for(uint i = 0; i < LCorner.size();i++){
         Point c1 = LCorner[i].coor;
         if(LCorner[i].homologo)
         visorS->drawEllipse(QPoint(c1.x, c1.y), 1, 1, Qt::green, -1, 0);
-
     }
 }
 
 
-void MainWindow::deselectWindow()
-{
+void MainWindow::deselectWindow(){
     winSelected = false;
 }
 

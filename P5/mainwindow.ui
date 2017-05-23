@@ -99,20 +99,20 @@
     <string>Load Images</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_3">
+  <widget class="QCheckBox" name="showCorners">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>746</x>
      <y>240</y>
-     <width>97</width>
+     <width>121</width>
      <height>22</height>
     </rect>
    </property>
    <property name="text">
-    <string>Merge</string>
+    <string>Show corners</string>
    </property>
   </widget>
-  <widget class="QFrame" name="imageFrameS_2">
+  <widget class="QFrame" name="imageFrameBS">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -128,7 +128,7 @@
     <enum>QFrame::Raised</enum>
    </property>
   </widget>
-  <widget class="QFrame" name="imageFrameD_2">
+  <widget class="QFrame" name="imageFrameBD">
    <property name="geometry">
     <rect>
      <x>390</x>
