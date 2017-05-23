@@ -33,13 +33,15 @@ private:
     QTimer timer;
 
     VideoCapture *cap;
-    RCDraw *visorS, *visorD;
-    QImage *imgS, *imgD;
-    Mat colorImage, grayImage, destColorImage, destGrayImage;
+    RCDraw *visorS, *visorD, *visorBD, *visorBS;
+    QImage *imgS, *imgD, *imgBD, *imgBS;
+    Mat colorImage, grayImage, destColorImage, destGrayImage, gray2ColorImage, destGray2ColorImage;
     Mat imgCanny, segIMage, visitados;
-    Mat gray2ColorImage, destGray2ColorImage;
+    Mat bottomGrayImage, destBottomGrayImage;
     bool capture, showColorImage, winSelected, bordes;
     Rect imageWindow;
+    Mat dispImg, bordeImg, pfijos;
+    float ancho;
 
     struct region{
         int idR;
@@ -49,8 +51,25 @@ private:
         std::vector<Point> frontera;
     };
 
-    std::vector<region> listRegion;
+    struct corner{
+        Point coor;
+        float vcoor;
+        bool  homologo;
+    };
 
+    struct greater_than{
+
+            inline bool operator() (const corner& corner1, const corner& corner2)
+            {
+                return (corner1.vcoor > corner2.vcoor);
+            }
+     };
+
+    std::vector<region> listRegion;
+    vector <float> DispRegiones;
+    Mat corner1, corner2;
+    std::vector<corner> LCorner;
+    std::vector<Point> homologos;
 
 public slots:
     //void load_from_file();
@@ -60,13 +79,25 @@ public slots:
     void selectWindow(QPointF p, int w, int h);
     void deselectWindow();
     void loadFile();
+    void loadGround();
 
     void crearRegiones();
     void analisisRegion(Point pInicial, Mat imagen, Mat &visitados, int idReg);
     void dibujarImg();
     void frontera();
-    void drawBorders();
     void flagBorde();
+
+    void calcularEsquinas();
+    void calcMediaDisp();
+
+    void propagar();
+    void dispersion(const Point &inicial);
+    void disparity();
+    void generarImagenDisp();
+    void showDispImg();
+
+    void drawCorners();
+
 
 };
 
