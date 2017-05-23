@@ -45,7 +45,7 @@
     <enum>QFrame::Raised</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="captureButton">
+  <widget class="QPushButton" name="loadButton">
    <property name="geometry">
     <rect>
      <x>740</x>
@@ -55,55 +55,14 @@
     </rect>
    </property>
    <property name="text">
-    <string>Stop Capture</string>
-   </property>
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="colorButton">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>60</y>
-     <width>151</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="focusPolicy">
-    <enum>Qt::StrongFocus</enum>
-   </property>
-   <property name="text">
-    <string>Color Image</string>
-   </property>
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="loadimageButton">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>100</y>
-     <width>151</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
     <string>Load Images</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="showCorners">
+  <widget class="QCheckBox" name="cornersCheck">
    <property name="geometry">
     <rect>
      <x>746</x>
-     <y>240</y>
+     <y>160</y>
      <width>121</width>
      <height>22</height>
     </rect>
@@ -144,11 +103,11 @@
     <enum>QFrame::Raised</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="InitializeDisButton">
+  <widget class="QPushButton" name="initializeButton">
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>140</y>
+     <y>60</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -157,11 +116,11 @@
     <string>Initialize Disparity</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="propagateDisButton">
+  <widget class="QPushButton" name="propagateButton">
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>180</y>
+     <y>100</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -170,11 +129,11 @@
     <string>Propagate Disparity</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="LoadGrtruthButton">
+  <widget class="QPushButton" name="groundButton">
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>280</y>
+     <y>290</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -186,8 +145,8 @@
   <widget class="QLCDNumber" name="lcdExtimated">
    <property name="geometry">
     <rect>
-     <x>810</x>
-     <y>390</y>
+     <x>790</x>
+     <y>370</y>
      <width>64</width>
      <height>23</height>
     </rect>
@@ -196,8 +155,8 @@
   <widget class="QLCDNumber" name="lcdTrue">
    <property name="geometry">
     <rect>
-     <x>810</x>
-     <y>480</y>
+     <x>790</x>
+     <y>440</y>
      <width>64</width>
      <height>23</height>
     </rect>
@@ -207,7 +166,7 @@
    <property name="geometry">
     <rect>
      <x>750</x>
-     <y>350</y>
+     <y>340</y>
      <width>141</width>
      <height>20</height>
     </rect>
@@ -216,11 +175,11 @@
     <string>Extimated disparity</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label2">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>440</y>
+     <x>770</x>
+     <y>410</y>
      <width>101</width>
      <height>20</height>
     </rect>

@@ -49,14 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     connect(&timer,SIGNAL(timeout()),this,SLOT(compute()));
-    connect(ui->colorButton,SIGNAL(clicked(bool)),this,SLOT(change_color_gray(bool)));
     connect(visorS,SIGNAL(windowSelected(QPointF, int, int)),this,SLOT(selectWindow(QPointF, int, int)));
     connect(visorS,SIGNAL(pressEvent()),this,SLOT(deselectWindow()));
-    connect(ui->loadimageButton,SIGNAL(clicked(bool)),this,SLOT(load_from_file()));
-    connect(ui->LoadGrtruthButton,SIGNAL(clicked(bool)),this,SLOT(loadGround()));
-    connect(ui->InitializeDisButton,SIGNAL(clicked(bool)),this,SLOT(calcMediaDisp()));
-    connect(ui->InitializeDisButton,SIGNAL(clicked(bool)),this,SLOT(generarImagenDisp()));
-    connect(ui->propagateDisButton,SIGNAL(clicked(bool)),this,SLOT(propagar()));
+    connect(ui->loadButton,SIGNAL(clicked(bool)),this,SLOT(load_from_file()));
+    connect(ui->groundButton,SIGNAL(clicked(bool)),this,SLOT(loadGround()));
+    connect(ui->initializeButton,SIGNAL(clicked(bool)),this,SLOT(calcMediaDisp()));
+    //connect(ui->initializeButton,SIGNAL(clicked(bool)),this,SLOT(generarImagenDisp()));
+    connect(ui->propagateButton,SIGNAL(clicked(bool)),this,SLOT(propagar()));
 
 
 
@@ -122,7 +121,7 @@ void MainWindow::compute()
     visorBS->update();
     visorBD->update();
       //  drawRegions();
-    if(ui->showCorners->isChecked()){
+    if(ui->cornersCheck->isChecked()){
         showCorners();
     }
 }
@@ -474,6 +473,7 @@ void MainWindow::calcMediaDisp(){
 
     /*for(int i = 0;i<DispRegiones.size();i++)
         cout<<"region: "<<i<<" disparidad media: "<<DispRegiones[i]<<endl;*/
+    generarImagenDisp();
 
 }
 
